@@ -46,7 +46,7 @@ class Stone(object):
                        (self.point[0], self.point[1] - 1),
                        (self.point[0], self.point[1] + 1)]
         for point in neighboring:
-            if not 0 < point[0] < 20 or not 0 < point[1] < 20:
+            if not 0 < point[0] <= self.board.board_size or not 0 < point[1] <= self.board.board_size:
                 neighboring.remove(point)
         return neighboring
 
@@ -78,7 +78,7 @@ class Stone(object):
 
     def __str__(self):
         """Return the location of the stone, e.g. 'D17'."""
-        return 'ABCDEFGHJKLMNOPQRST'[self.point[0]-1] + str(20-(self.point[1]))
+        return 'ABCDEFGHJKLMNOPQRST'[self.point[0]-1] + str(self.board.board_size-(self.point[1]))
 
 
 class Group(object):

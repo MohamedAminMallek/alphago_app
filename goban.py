@@ -10,10 +10,12 @@ pygame-related activities. Together they form a fully working goban.
 
 __author__ = "Aku Kotkavuo <aku@hibana.net>"
 __version__ = "0.1"
-
+import random
 import pygame
 import go
 from sys import exit
+from Go_Board import *
+import time
 
 BACKGROUND = 'images/ramin.jpg'
 BOARD_SIZE = (820, 820)
@@ -30,23 +32,23 @@ class Stone(go.Stone):
 
     def draw(self):
         """Draw the stone as a circle."""
-        pygame.draw.circle(screen, self.color, self.coords, 20, 0)
+        pygame.draw.circle(screen, self.color, self.coords, 15, 0)
         pygame.display.update()
 
     def remove(self):
         """Remove the stone from board."""
-        blit_coords = (self.coords[0] - 20, self.coords[1] - 20)
-        area_rect = pygame.Rect(blit_coords, (40, 40))
+        blit_coords = (self.coords[0] -15, self.coords[1] -15)
+        area_rect = pygame.Rect(blit_coords, (30, 30))
         screen.blit(background, blit_coords, area_rect)
         pygame.display.update()
         super(Stone, self).remove()
 
 
-class Board(go.Board):
+class Board(Our_Board):
     def __init__(self):
         """Create, initialize and draw an empty board."""
         super(Board, self).__init__()
-        self.outline = pygame.Rect(45, 45, 720, 720)
+        self.outline = pygame.Rect(45, 45, 40*(self.board_size-1), 40*(self.board_size-1))
         self.draw()
 
     def draw(self):
@@ -63,14 +65,16 @@ class Board(go.Board):
         pygame.draw.rect(background, BLACK, self.outline, 3)
         # Outline is inflated here for future use as a collidebox for the mouse
         self.outline.inflate_ip(20, 20)
-        for i in range(18):
-            for j in range(18):
+        for i in range(self.board_size-1):
+            for j in range(self.board_size-1):
                 rect = pygame.Rect(45 + (40 * i), 45 + (40 * j), 40, 40)
                 pygame.draw.rect(background, BLACK, rect, 1)
+        """
         for i in range(3):
             for j in range(3):
                 coords = (165 + (240 * i), 165 + (240 * j))
                 pygame.draw.circle(background, BLACK, coords, 5, 0)
+        """
         screen.blit(background, (0, 0))
         pygame.display.update()
 
@@ -80,10 +84,14 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
+            """
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and board.outline.collidepoint(event.pos):
                     x = int(round(((event.pos[0] - 5) / 40.0), 0))
                     y = int(round(((event.pos[1] - 5) / 40.0), 0))
+                    point = (x,y)
+                    #board.push(point)
+                    
                     stone = board.search(point=(x, y))
                     if stone:
                         continue#stone.remove()
@@ -91,6 +99,17 @@ def main():
                         added_stone = Stone(board, (x, y), board.turn())
                     board.update_liberties(added_stone)
 
+                    board.print()
+            """
+            moves = board.get_legal_moves()
+            point = moves[random.randint(0,len(moves))-1]
+            stone = board.search(point=point)
+            if stone:
+                continue#stone.remove()
+            else:
+                added_stone = Stone(board, point, board.turn())
+            board.update_liberties(added_stone)
+            time.sleep(0.5)
 
 if __name__ == '__main__':
     pygame.init()
