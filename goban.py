@@ -84,22 +84,22 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 exit()
-            """
+            
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1 and board.outline.collidepoint(event.pos):
                     x = int(round(((event.pos[0] - 5) / 40.0), 0))
                     y = int(round(((event.pos[1] - 5) / 40.0), 0))
                     point = (x,y)
-                    #board.push(point)
                     
-                    stone = board.search(point=(x, y))
-                    if stone:
-                        continue#stone.remove()
-                    else:
-                        added_stone = Stone(board, (x, y), board.turn())
-                    board.update_liberties(added_stone)
+                    if point in board.get_legal_moves():
+                        stone = board.search(point=(x, y))
+                        if stone:
+                            continue#stone.remove()
+                        else:
+                            added_stone = Stone(board, (x, y), board.turn())
+                        board.update_liberties(added_stone)
 
-                    board.print()
+                        board.print()
             """
             moves = board.get_legal_moves()
             point = moves[random.randint(0,len(moves))-1]
@@ -110,6 +110,7 @@ def main():
                 added_stone = Stone(board, point, board.turn())
             board.update_liberties(added_stone)
             time.sleep(0.5)
+            """
 
 if __name__ == '__main__':
     pygame.init()

@@ -15,18 +15,44 @@ class Our_Board(go.Board):
         for i in range(1,self.board_size+1):
             for j in range(1,self.board_size+1):
                 stone = self.search(point=(j,i))
-                if type(stone) != type:
+                if type(stone) == list:
                     moves.append((j,i))
     
+        #block suicide only when capture
+        for move in moves:
+            neighboring = [(move[0]-1,move[1]),
+                            (move[0]+1,move[1]),
+                            (move[0],move[1]-1),
+                            (move[0],move[1]+1)]
+            valid_move = False
+            neighboring_stone = []
+            for neighbor in neighboring:
+                if not 0 < neighbor[0] <= self.board_size or not 0 < neighbor[1] <= self.board_size:
+                    neighboring.remove(neighbor)
+                else:
+                    stone = self.search(point=neighbor)
+                    if type(stone) == list:
+                        valid_move = True
+                        break
+                    else:
+                        neighboring_stone.append(stone)
+
+            if not valid_move:
+                for stone in neighboring_stone:
+                    if stone.color == self.next and len(stone.liberties)>1:
+                        valid_move = True
+                    if stone.color != self.next and len(stone.liberties)==1:
+                        valid_move = True
+            if not valid_move:
+                moves.remove(move)
+
         # add filter on moves
-        # ....    
+        # ....  
     
         return moves
-
-        pass
     
     def game_over(self):
-        pass
+        return True if self.game_is_over>0 else False
     
     def push(self,point):
 
