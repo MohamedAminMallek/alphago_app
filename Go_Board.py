@@ -52,7 +52,7 @@ class Our_Board(go.Board):
         return moves
     
     def game_over(self):
-        return True if self.game_is_over>0 else False
+        return True if ((self.game_is_over>0) or len(self.get_legal_moves())==0) else False
     
     def push(self,point):
 
@@ -62,7 +62,7 @@ class Our_Board(go.Board):
             return
         
         #check if 2 pass
-        if self.last_move == point:
+        if self.last_move == point and point == (-1,-1):
             self.game_is_over = 2
             return
 

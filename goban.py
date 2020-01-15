@@ -100,17 +100,17 @@ def main():
                         board.update_liberties(added_stone)
 
                         board.print()
-            """
-            moves = board.get_legal_moves()
-            point = moves[random.randint(0,len(moves))-1]
-            stone = board.search(point=point)
-            if stone:
-                continue#stone.remove()
-            else:
-                added_stone = Stone(board, point, board.turn())
-            board.update_liberties(added_stone)
-            time.sleep(0.5)
-            """
+                    
+                    moves = board.get_legal_moves()
+                    point = moves[random.randint(0,len(moves))-1]
+                    stone = board.search(point=point)
+                    if stone:
+                        continue#stone.remove()
+                    else:
+                        added_stone = Stone(board, point, board.turn())
+                    board.update_liberties(added_stone)
+            
+            
 
 if __name__ == '__main__':
     pygame.init()
