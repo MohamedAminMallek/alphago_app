@@ -2,6 +2,7 @@ import copy
 from random import randint
 import numpy as np
 import sys
+import math  
 
 Black_color = (0, 0, 0)
 White_color = (255, 255, 255)
@@ -35,7 +36,7 @@ def selection(root,color):
                 best_score = score
                 best_node = node
         rand = np.random.rand(1)[0]
-        if rand>0.5:
+        if rand>0.8:
             aux = expansion(aux)
         else:
             aux = best_node
@@ -50,10 +51,12 @@ def expansion(root):
 
 def simulation(node):
     while not node.board.game_over():
-        legal_moves = node.board.legal_moves()
+        legal_moves = node.board.get_legal_moves()
         move =  legal_moves[randint(0,len(legal_moves)-1)]
         node.board.push(move)
-    result = node.board._nbBLACK - node.board._nbWHITE
+    score = node.board.score()
+    
+    result = score[0] - score[1]
 
     if result > 0:
         return (1,0)
@@ -75,19 +78,30 @@ def best_child(root,color):
     best_node = None
     
     for node in root.children:
-        score = node.nb_win_black - node.nb_win_white
-        score = -score if color == White_color else score
+        
+        reward = 0
+
+        if color == White_color:
+            temp_score = node.nb_win_white / (node.nb_win_black + node.nb_win_white)
+        else:
+            temp_score = node.nb_win_black / (node.nb_win_black + node.nb_win_white)
+        
+        reward = temp_score
+
+        score = reward + 2*0.45*math.sqrt(2*math.log(node.parent.nb_visits)/node.nb_visits)
+        
+        
         if score>best_score:
             best_score = score
             best_node = node
 
-    print("Best Score = ","Black win ",str(best_node.nb_win_black)+" vs ","White win ",str(best_node.nb_win_white))
+    print("Best Score = ",score,"Black win ",str(best_node.nb_win_black)+" vs ","White win ",str(best_node.nb_win_white))
 
     move = best_node.board.last_move
 
     return move if move != None else (color,-1,-1)
 
-def MCTS(board,color,resources_left=80):
+def MCTS(board,color,resources_left=10):
     root = Node_MCTS(None,board)
     while(resources_left>0):
         node = selection(root,color)
@@ -97,4 +111,4 @@ def MCTS(board,color,resources_left=80):
         resources_left-=1
     
     move = best_child(root,color)
-    return (move[1],move[2])
+    return move
