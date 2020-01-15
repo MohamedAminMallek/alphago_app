@@ -79,6 +79,18 @@ class Our_Board(go.Board):
             self.update_liberties(added_stone)
         self.last_move = point
 
+    def score(self):
+        nbBlack = 0
+        nbWhite = 0
+        for i in range(1,self.board_size+1):
+            for j in range(1,self.board_size+1):
+                stone = self.search(point=(j,i))
+                if type(stone) != list:
+                    if stone.color == (255,255,255):
+                        nbWhite+=1
+                    else:
+                        nbBlack+=1
+        return (nbBlack,nbWhite)
     def print(self):
         for i in range(self.board_size+1):
             print('_',end=' ')
