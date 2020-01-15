@@ -16,6 +16,7 @@ import go
 from sys import exit
 from Go_Board import *
 import time
+import MCTS_GO
 
 BACKGROUND = 'images/ramin.jpg'
 BOARD_SIZE = (820, 820)
@@ -91,7 +92,7 @@ def main():
                     y = int(round(((event.pos[1] - 5) / 40.0), 0))
                     point = (x,y)
                     
-                    if point in board.get_legal_moves():
+                    while point in board.get_legal_moves():
                         stone = board.search(point=(x, y))
                         if stone:
                             continue#stone.remove()

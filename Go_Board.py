@@ -36,13 +36,21 @@ class Our_Board(go.Board):
                         break
                     else:
                         neighboring_stone.append(stone)
-
+            count_neighbor = 0
             if not valid_move:
                 for stone in neighboring_stone:
+                    # remove eye move
+                    if stone.color == self.next:
+                        count_neighbor+=1
+           
                     if stone.color == self.next and len(stone.liberties)>1:
                         valid_move = True
                     if stone.color != self.next and len(stone.liberties)==1:
                         valid_move = True
+                # remove eye move
+                if count_neighbor == len(neighboring_stone):
+                    valid_move = False
+            
             if not valid_move:
                 moves.remove(move)
 

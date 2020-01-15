@@ -2,7 +2,8 @@ import copy
 from random import randint
 import numpy as np
 import sys
-import math  
+import math 
+from utils import count_points
 
 Black_color = (0, 0, 0)
 White_color = (255, 255, 255)
@@ -50,14 +51,21 @@ def expansion(root):
     return new_node
 
 def simulation(node):
-    while not node.board.game_over():
+    print("begin of simulation ...")
+    while not node.board.game_over():#  and ((node.board.score()[0]+node.board.score()[1])/(node.board.board_size**2))<0.7 :
         legal_moves = node.board.get_legal_moves()
         move =  legal_moves[randint(0,len(legal_moves)-1)]
+        node.board.print()
+        #print(move,node.board.next)
         node.board.push(move)
-    score = node.board.score()
-    
-    result = score[0] - score[1]
 
+
+    node.board.print()
+    score = count_points(node.board)#node.board.score()
+    #print("Score from utils",score)
+
+    result = score[0] - score[1]
+    print("end of simulation")
     if result > 0:
         return (1,0)
     else:
