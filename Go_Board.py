@@ -1,4 +1,5 @@
 import go as go
+import numpy as np
 
 class Our_Board(go.Board):
 
@@ -99,6 +100,16 @@ class Our_Board(go.Board):
                     else:
                         nbBlack+=1
         return (nbBlack,nbWhite)
+    def get_matrix(self):
+
+        matrix = np.zeros(shape=(self.board_size,self.board_size),dtype=int)
+        for i in range(1,self.board_size+1):
+            for j in range(1,self.board_size+1):
+                stone = self.search(point=(j,i))
+                matrix[i-1][j-1] = ((1 if stone.color==(0,0,0) else -1) if (type(stone) != list) else 0)
+        return matrix
+
+
     def print(self):
         for i in range(self.board_size+1):
             print('_',end=' ')
