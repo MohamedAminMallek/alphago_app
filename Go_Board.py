@@ -102,7 +102,7 @@ class Our_Board(go.Board):
         return (nbBlack,nbWhite)
     def get_matrix(self):
 
-        matrix = np.zeros(shape=(self.board_size,self.board_size),dtype=int)
+        matrix = np.zeros(shape=(self.board_size,self.board_size))
         for i in range(1,self.board_size+1):
             for j in range(1,self.board_size+1):
                 stone = self.search(point=(j,i))
