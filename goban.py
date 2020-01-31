@@ -80,6 +80,15 @@ class Board(Our_Board):
         pygame.display.update()
 
 def main():
+    while not board.game_over():
+        (x,y) = MCTS_GO.MCTS(board,board.next)
+        stone = board.search(point=(x, y))
+        if stone:
+            continue#stone.remove()
+        else:
+            added_stone = Stone(board, (x, y), board.turn())
+        board.update_liberties(added_stone)
+        """
     while True:
         pygame.time.wait(250)
         for event in pygame.event.get():
@@ -101,16 +110,8 @@ def main():
                         board.update_liberties(added_stone)
 
                         board.print()
+    """
                     
-                    moves = board.get_legal_moves()
-                    point = moves[random.randint(0,len(moves))-1]
-                    stone = board.search(point=point)
-                    if stone:
-                        continue#stone.remove()
-                    else:
-                        added_stone = Stone(board, point, board.turn())
-                    board.update_liberties(added_stone)
-            
             
 
 if __name__ == '__main__':

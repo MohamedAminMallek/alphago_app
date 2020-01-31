@@ -10,7 +10,7 @@ class Our_Board(go.Board):
         # ....
     
     def get_legal_moves(self):
-        moves = []
+        moves = [(-1,-1)]
         
         #empty position
         for i in range(1,self.board_size+1):
